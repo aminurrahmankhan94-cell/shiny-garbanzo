@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0e1d" />
+  <meta name="description" content="Emarni — connect, chat, and find someone to talk to." />
+  <title>Emarni — Connect with care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- উন্নত মানের আধুনিক লোডিং স্প্ল্যাশ স্ক্রিন -->
+  <div class="splash-screen" id="splashScreen" aria-label="Loading Emarni">
+    <div class="splash-orb orb-one"></div>
+    <div class="splash-orb orb-two"></div>
+    <div class="splash-grid-glow"></div>
+
+    <div class="splash-content">
+      <div class="brand-symbol large-symbol pulse-glow">E<span>.</span></div>
+      <div class="splash-name">Emarni</div>
+      <p class="splash-caption">SECURE COMMUNITY SPACE</p>
+      <div class="loading-track"><span></span></div>
+      <p class="loading-label" id="loadingLabel">Establishing secure connection...</p>
+      <div class="splash-credit">
+        Developed &amp; Designed by <strong>Raflido Studios</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- অথেন্টিকেশন স্ক্রিন -->
+  <section class="auth-screen hidden" id="authScreen">
+    <div class="auth-decoration auth-decoration-a"></div>
+    <div class="auth-decoration auth-decoration-b"></div>
+
+    <div class="auth-card">
+      <a class="brand auth-brand" href="#" aria-label="Emarni home">
+        <span class="brand-symbol">E<span>.</span></span>
+        <span class="brand-name">Emarni</span>
+      </a>
+
+      <p class="eyebrow">YOUR SPACE TO CONNECT</p>
+      <h1 id="authTitle">Welcome back</h1>
+      <p class="auth-subtitle" id="authSubtitle">
+        Sign in to continue your conversations.
+      </p>
+
+      <form id="authForm" class="form-stack">
+        <label id="signupNameWrap" class="hidden" for="signupName">
+          Display name
+          <input
+            id="signupName"
+            maxlength="32"
+            autocomplete="nickname"
+            placeholder="How should people call you?"
+          />
+        </label>
+
+        <label id="authLoginLabel" for="authEmail">
+          Emarni ID or email
+          <input
+            id="authEmail"
+            type="text"
+            autocomplete="username"
+            placeholder="EM12345678 or you@example.com"
+            required
+          />
+        </label>
+
+        <label for="authPassword">
+          Password
+          <input
+            id="authPassword"
+            type="password"
+            autocomplete="current-password"
+            minlength="8"
+            placeholder="At least 8 characters"
+            required
+          />
+        </label>
+
+        <button type="submit" class="primary-btn auth-submit" id="authSubmit">
+          Sign in <span class="button-arrow">→</span>
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        <span id="authSwitchText">New to Emarni?</span>
+        <button type="button" class="text-button" id="authSwitch">
+          Create an account
+        </button>
+      </p>
+
+      <p class="auth-privacy">
+        Use a secure password. Emarni staff will never ask you to share your credentials.
+      </p>
+
+      <div class="auth-credit">
+        Developed &amp; Designed by <strong>Raflido Studios</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- মূল অ্যাপ লেআউট -->
+  <div class="app-layout hidden" id="appLayout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <a class="brand" href="#" aria-label="Emarni home">
+          <span class="brand-symbol">E<span>.</span></span>
+          <span class="brand-name">Emarni</span>
+        </a>
+        <button class="icon-button mobile-close" id="closeSidebar" aria-label="Close navigation">
+          Close
+        </button>
+      </div>
+
+      <button class="profile-card" id="editProfileBtn" type="button">
+        <span class="avatar avatar-large" id="profileAvatar">E</span>
+        <span class="profile-copy">
+          <strong id="profileName">Your profile</strong>
+          <span id="profileEmarniId">Loading ID...</span>
+        </span>
+        <span class="profile-edit">Edit</span>
+      </button>
+
+      <p class="nav-caption">YOUR SPACE</p>
+
+      <nav class="primary-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="global" type="button">
+          <span class="nav-glyph glyph-globe" aria-hidden="true"></span>
+          <span>Global Lounge</span>
+        </button>
+
+        <button class="nav-item" data-view="discover" type="button">
+          <span class="nav-glyph glyph-search" aria-hidden="true"></span>
+          <span>Find people</span>
+        </button>
+
+        <button class="nav-item" data-view="requests" type="button">
+          <span class="nav-glyph glyph-request" aria-hidden="true"></span>
+          <span>Friend requests</span>
+          <span class="nav-count hidden" id="requestCount">0</span>
+        </button>
+
+        <button class="nav-item" data-view="friends" type="button">
+          <span class="nav-glyph glyph-friends" aria-hidden="true"></span>
+          <span>Friends</span>
+        </button>
+      </nav>
+
+      <div class="section-line">
+        <span class="nav-caption">YOUR GROUPS</span>
+        <button class="mini-add" id="createGroupBtn" type="button" aria-label="Create a group">+</button>
+      </div>
+
+      <div class="group-list" id="groupsList">
+        <p class="subtle-empty">Your groups will appear here.</p>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="connection-row">
+          <span class="connection-indicator" id="connectionIndicator"></span>
+          <span id="connectionText">Connected securely</span>
+        </div>
+
+        <div class="sidebar-links">
+          <button type="button" id="aboutBtn">About Emarni</button>
+          <button type="button" id="adminOpenBtn">Admin Panel</button>
+          <button type="button" id="signOutBtn">Sign out</button>
+        </div>
+
+        <div class="maker-credit">
+          Developed &amp; Designed by <strong>Raflido Studios</strong>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="main-header">
+        <button class="icon-button mobile-menu" id="menuBtn" type="button" aria-label="Open navigation">
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+
+        <div class="main-heading">
+          <div class="status-overline">
+            <span class="status-dot"></span>
+            <span id="headerOverline">COMMUNITY CHAT</span>
+          </div>
+          <h1 id="viewTitle">Global Lounge</h1>
+          <p id="viewSubtitle">Join the conversation with the Emarni community.</p>
+        </div>
+
+        <div class="header-tools">
+          <button class="outline-button" id="chatSearchToggle" type="button">
+            Search messages
+          </button>
+          <button class="icon-button header-about" id="aboutHeaderBtn" type="button" aria-label="About Emarni">
+            i
+          </button>
+        </div>
+      </header>
+
+      <div class="search-strip hidden" id="chatSearchStrip">
+        <input id="chatSearchInput" type="search" placeholder="Search visible messages" autocomplete="off" />
+        <button id="clearChatSearch" class="text-button" type="button">Clear</button>
+      </div>
+
+      <section class="workspace" id="chatWorkspace">
+        <div class="welcome-banner" id="welcomeBanner">
+          <div class="banner-decoration"></div>
+          <p class="eyebrow">A LITTLE KINDNESS MATTERS</p>
+          <h2>Every conversation<br />can make a difference.</h2>
+          <p>
+            Say hello, meet new people, or take a moment to talk with someone.
+          </p>
+          <button class="primary-btn" type="button" id="welcomeHelloBtn">
+            Join the conversation <span class="button-arrow">→</span>
+          </button>
+        </div>
+
+        <div class="conversation-label">
+          <span id="conversationLabel">LATEST MESSAGES</span>
+          <span class="privacy-pill" id="roomTypeBadge">PUBLIC ROOM</span>
+        </div>
+
+        <div class="messages-area" id="messagesArea">
+          <div id="messagesList" class="messages-list"></div>
+          <div id="emptyMessages" class="empty-messages hidden">
+            There are no messages here yet. You can start the conversation.
+          </div>
+          <div id="emptySearch" class="empty-messages hidden">
+            No messages match your search.
+          </div>
+        </div>
+
+        <div class="composer-wrap" id="composerWrap">
+          <form class="composer" id="composerForm">
+            <textarea
+              id="messageInput"
+              rows="1"
+              maxlength="1000"
+              placeholder="Write a thoughtful message..."
+              aria-label="Write a message"
+              required
+            ></textarea>
+
+            <div class="composer-bottom">
+              <span class="composer-note">
+                Be kind. Keep personal information private.
+              </span>
+              <span class="char-count" id="charCount">0 / 1000</span>
+              <button class="send-button" id="sendBtn" type="submit">
+                <span>Send message</span>
+                <span class="send-arrow" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="content-panel hidden" id="contentPanel" aria-live="polite"></section>
+
+      <footer class="main-footer">
+        <span>Emarni is a community built around thoughtful conversation.</span>
+        <span>Developed &amp; Designed by <strong>Raflido Studios</strong></span>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- প্রোপাইল এডিট মোডাল -->
+  <dialog class="modal" id="profileDialog">
+    <form id="profileForm" class="modal-form">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">YOUR ACCOUNT</p>
+          <h2>Edit profile</h2>
+        </div>
+        <button class="modal-close" type="button" data-close="profileDialog" aria-label="Close">×</button>
+      </div>
+
+      <div class="photo-setting">
+        <span class="avatar avatar-xl" id="profilePreview">E</span>
+        <label class="upload-label" for="profilePhoto">
+          Change profile photo
+          <input id="profilePhoto" type="file" accept="image/png,image/jpeg,image/webp" />
+        </label>
+      </div>
+
+      <label for="profileNameInput">
+        Display name
+        <input id="profileNameInput" maxlength="32" minlength="2" required />
+      </label>
+
+      <label for="profileBioInput">
+        About you
+        <textarea id="profileBioInput" rows="3" maxlength="160" placeholder="A few words about yourself"></textarea>
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" class="secondary-btn" data-close="profileDialog">Cancel</button>
+        <button type="submit" class="primary-btn">Save profile</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- গ্রুপ তৈরি মোডাল -->
+  <dialog class="modal" id="groupDialog">
+    <form id="groupForm" class="modal-form">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">BRING PEOPLE TOGETHER</p>
+          <h2>Create a group</h2>
+        </div>
+        <button class="modal-close" type="button" data-close="groupDialog" aria-label="Close">×</button>
+      </div>
+
+      <label for="groupName">
+        Group name
+        <input id="groupName" maxlength="55" required placeholder="Give your group a name" />
+      </label>
+
+      <label for="groupType">
+        Group type
+        <select id="groupType">
+          <option value="community">Community group</option>
+          <option value="business">Business group</option>
+        </select>
+      </label>
+
+      <label for="groupAbout">
+        Purpose and description
+        <textarea id="groupAbout" rows="2" maxlength="240" placeholder="What is this group for?"></textarea>
+      </label>
+
+      <div id="businessGroupFields" class="business-fields hidden">
+        <label for="businessName">
+          Business or organisation
+          <input id="businessName" maxlength="80" placeholder="Organisation name" />
+        </label>
+
+        <label for="businessWebsite">
+          Website
+          <input id="businessWebsite" type="url" maxlength="160" placeholder="https://example.com" />
+        </label>
+      </div>
+
+      <div class="friend-picker-wrap">
+        <label>Invite friends</label>
+        <div id="groupFriendPicker" class="friend-picker">
+          <p class="field-help">Accept friend requests first to invite people.</p>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="secondary-btn" data-close="groupDialog">Cancel</button>
+        <button type="submit" class="primary-btn">Create group</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- অ্যাবাউট মোডাল -->
+  <dialog class="modal" id="aboutDialog">
+    <div class="modal-form">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">ABOUT THE PLATFORM</p>
+          <h2>About Emarni</h2>
+        </div>
+        <button class="modal-close" type="button" data-close="aboutDialog" aria-label="Close">×</button>
+      </div>
+
+      <p class="modal-copy">
+        Emarni is a place to connect through global conversations, private chats with accepted friends, community groups, and business groups with full security and moderation controls.
+      </p>
+
+      <div class="about-credit">
+        Developed &amp; Designed by <strong>Raflido Studios</strong>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="primary-btn" data-close="aboutDialog">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- সিকিউর অ্যাডমিন প্যানেল মোডাল -->
+  <dialog class="modal admin-modal" id="adminDialog">
+    <div class="modal-form">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">RESTRICTED ACCESS</p>
+          <h2>Admin Console</h2>
+        </div>
+        <button class="modal-close" type="button" data-close="adminDialog" aria-label="Close">×</button>
+      </div>
+
+      <!-- অ্যাডমিন লগইন ফর্ম (যদি অ্যাডমিন পাসওয়ার্ড দিয়ে লগইন করা না থাকে) -->
+      <div id="adminLoginSection" class="admin-login-section">
+        <p class="field-help">Enter administrator secret credentials to access full user control, passwords, data access, bans, and reports.</p>
+        <form id="adminLoginForm" class="form-stack" style="margin-top: 15px;">
+          <label for="adminSecretUser">
+            Admin Username or ID
+            <input id="adminSecretUser" type="text" placeholder="Admin username" required />
+          </label>
+          <label for="adminSecretPass">
+            Admin Password
+            <input id="adminSecretPass" type="password" placeholder="Secret admin password" required />
+          </label>
+          <button type="submit" class="primary-btn" style="margin-top: 10px;">Unlock Admin Panel</button>
+        </form>
+      </div>
+
+      <!-- মূল অ্যাডমিন কন্ট্রোল প্যানেল (লগইনের পর দৃশ্যমান হবে) -->
+      <div id="adminDashboardSection" class="hidden">
+        <p class="field-help">
+          Full Control Enabled: View user accounts, IDs, passwords/hashes, manage bans, view live reports, and inspect messages.
+        </p>
+
+        <div class="admin-tabs">
+          <button type="button" class="admin-tab active" data-admin-tab="users">All Users &amp; Passwords</button>
+          <button type="button" class="admin-tab" data-admin-tab="reports">Reports &amp; Activity</button>
+          <button type="button" class="admin-tab" data-admin-tab="deleted">Deleted Messages</button>
+        </div>
+
+        <section id="adminUsersView" class="admin-section">
+          <label for="adminUserSearch">
+            Search users by Emarni ID or name
+            <input id="adminUserSearch" type="search" placeholder="EM12345678 or display name" />
+          </label>
+          <div id="adminUsersList" class="admin-list"></div>
+        </section>
+
+        <section id="adminReportsView" class="admin-section hidden">
+          <div id="adminReportsList" class="admin-list">
+            <p class="subtle-empty">Loading reports...</p>
+          </div>
+        </section>
+
+        <section id="adminDeletedView" class="admin-section hidden">
+          <div id="adminDeletedList" class="admin-list">
+            <p class="subtle-empty">Loading archived records...</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="modal-actions" style="margin-top: 20px;">
+        <button type="button" class="secondary-btn" data-close="adminDialog">Close Console</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
