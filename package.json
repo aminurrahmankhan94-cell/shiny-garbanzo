@@ -1,0 +1,9 @@
+{
+  "name": "emarni-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Emarni static web frontend and Firebase Functions backend",
+  "scripts": {
+    "deploy:firebase": "firebase deploy --only database,storage,functions"
+  }
+}

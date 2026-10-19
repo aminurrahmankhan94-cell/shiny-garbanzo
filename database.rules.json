@@ -1,0 +1,110 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        "profile": {
+          ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
+          ".write": "auth != null && (auth.uid === $uid || auth.token.admin === true) && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true)",
+          ".validate": "newData.hasChildren(['uid', 'emarniId', 'displayName']) && newData.child('uid').val() === $uid && newData.child('displayName').isString() && newData.child('displayName').val().length >= 2 && newData.child('displayName').val().length <= 32 && newData.child('emarniId').isString()"
+        }
+      }
+    },
+    "userDirectory": {
+      ".read": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true)",
+      "$emarniId": {
+        ".write": "auth != null && newData.child('uid').val() === auth.uid && (!data.exists() || data.child('uid').val() === auth.uid) && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true)",
+        ".validate": "newData.hasChildren(['uid', 'emarniId', 'displayName']) && newData.child('emarniId').val() === $emarniId && newData.child('displayName').isString() && newData.child('displayName').val().length >= 2 && newData.child('displayName').val().length <= 32"
+      }
+    },
+    "friendRequests": {
+      "$recipientUid": {
+        ".read": "auth != null && (auth.uid === $recipientUid || auth.token.admin === true)",
+        "$requesterUid": {
+          ".write": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true) && ((auth.uid === $requesterUid && (!data.exists() || data.child('status').val() === 'declined') && newData.child('fromUid').val() === auth.uid && newData.child('status').val() === 'pending') || (auth.uid === $recipientUid && data.exists() && newData.child('fromUid').val() === $requesterUid && (newData.child('status').val() === 'accepted' || newData.child('status').val() === 'declined')))",
+          ".validate": "newData.hasChildren(['fromUid', 'fromName', 'status', 'createdAt']) && newData.child('fromUid').val() === $requesterUid && newData.child('fromName').isString() && newData.child('status').isString()"
+        }
+      }
+    },
+    "friendships": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
+        "$otherUid": {
+          ".write": "auth != null && (auth.uid === $uid || auth.uid === $otherUid || auth.token.admin === true) && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true) && newData.child('status').val() === 'accepted' && (root.child('friendRequests').child($uid).child($otherUid).child('status').val() === 'accepted' || root.child('friendRequests').child($otherUid).child($uid).child('status').val() === 'accepted')",
+          ".validate": "newData.hasChildren(['status', 'since']) && newData.child('status').val() === 'accepted'"
+        }
+      }
+    },
+    "userGroups": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
+        "$groupId": {
+          ".write": "auth != null && auth.uid === $uid && root.child('groups').child($groupId).child('members').child($uid).exists() && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true)"
+        }
+      }
+    },
+    "rooms": {
+      "global": {
+        "messages": {
+          ".read": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true)",
+          "$messageId": {
+            ".write": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true) && !data.exists() && newData.child('uid').val() === auth.uid",
+            ".validate": "newData.hasChildren(['uid', 'senderName', 'text', 'createdAt']) && newData.child('senderName').isString() && newData.child('senderName').val().length >= 1 && newData.child('senderName').val().length <= 32 && newData.child('text').isString() && newData.child('text').val().length >= 1 && newData.child('text').val().length <= 1000"
+          },
+          ".indexOn": ["createdAt"]
+        }
+      },
+      "support": {
+        "messages": {
+          ".read": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true)",
+          "$messageId": {
+            ".write": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true) && !data.exists() && newData.child('uid').val() === auth.uid",
+            ".validate": "newData.hasChildren(['uid', 'senderName', 'text', 'createdAt']) && newData.child('senderName').isString() && newData.child('senderName').val().length >= 1 && newData.child('senderName').val().length <= 32 && newData.child('text').isString() && newData.child('text').val().length >= 1 && newData.child('text').val().length <= 1000"
+          },
+          ".indexOn": ["createdAt"]
+        }
+      }
+    },
+    "privateRooms": {
+      "$roomId": {
+        ".read": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true) && data.child('members').child(auth.uid).val() === true",
+        "messages": {
+          "$messageId": {
+            ".write": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true) && root.child('privateRooms').child($roomId).child('members').child(auth.uid).val() === true && !data.exists() && newData.child('uid').val() === auth.uid",
+            ".validate": "newData.hasChildren(['uid', 'senderName', 'text', 'createdAt']) && newData.child('senderName').isString() && newData.child('senderName').val().length >= 1 && newData.child('senderName').val().length <= 32 && newData.child('text').isString() && newData.child('text').val().length >= 1 && newData.child('text').val().length <= 1000"
+          },
+          ".indexOn": ["createdAt"]
+        }
+      }
+    },
+    "groups": {
+      "$groupId": {
+        ".read": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true) && data.child('members').child(auth.uid).exists()",
+        "messages": {
+          "$messageId": {
+            ".write": "auth != null && (!root.child('banned').child(auth.uid).exists() || auth.token.admin === true) && root.child('groups').child($groupId).child('members').child(auth.uid).exists() && !data.exists() && newData.child('uid').val() === auth.uid",
+            ".validate": "newData.hasChildren(['uid', 'senderName', 'text', 'createdAt']) && newData.child('senderName').isString() && newData.child('senderName').val().length >= 1 && newData.child('senderName').val().length <= 32 && newData.child('text').isString() && newData.child('text').val().length >= 1 && newData.child('text').val().length <= 1000"
+          },
+          ".indexOn": ["createdAt"]
+        }
+      }
+    },
+    "moderationArchive": {
+      ".read": "auth != null && auth.token.admin === true",
+      ".write": false
+    },
+    "banned": {
+      ".read": "auth != null && auth.token.admin === true",
+      ".write": false
+    },
+    "moderationReports": {
+      ".read": "auth != null && auth.token.admin === true",
+      ".write": false
+    },
+    "loginAttemptBuckets": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}
